@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:e_commerce/activity/profile/my_profile.dart';
 import 'package:e_commerce/activity/profile/order_details.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import "package:http/http.dart" as http;
 
 class MyOrders extends StatefulWidget {
   const MyOrders({super.key});
@@ -11,6 +14,32 @@ class MyOrders extends StatefulWidget {
 }
 
 class _MyOrdersState extends State<MyOrders> {
+  List orders = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("My Orders initiated");
+    getOrder();
+  }
+
+  getOrder() async {
+    var response =
+        await http.get(Uri.parse("http://localhost:5000/users/order"));
+
+
+  print("body : ${response.body}");
+
+  orders=jsonDecode(response.body);
+  print("orders length : ${orders.length}");
+  setState(() {
+
+  });
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,366 +99,141 @@ class _MyOrdersState extends State<MyOrders> {
               const SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 400,
-                    padding: EdgeInsets.only(
-                        left: 20, right: 20, top: 10, bottom: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Column(
+              for (int i = 0; i < orders.length; i++)
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Order No 1947034',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  '05-12-2019',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Row(
-                          children: [
-                            Text(
-                              'Tracking number : ',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            Text(
-                              'IW3475453455',
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Quality : ',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                Text(
-                                  '3',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Total Amount : ',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                Text(
-                                  '112',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                Icon(CupertinoIcons.money_dollar),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  OrderDetails()));
-                                    },
-                                    style: ElevatedButton.styleFrom(),
-                                    child: const Text(
-                                      'Details',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
+                        Container(
+                          width: 400,
+                          padding: EdgeInsets.only(
+                              left: 20, right: 20, top: 10, bottom: 10),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Order No : $i',
+                                        // 'Order No 1947034',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            const Text(
-                              'Delivered',
-                              style: TextStyle(color: Colors.green),
-                            ),
-                          ],
+                                  Row(
+                                    children: [
+                                      Text(
+                                        orders[i]['createdAt'],
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                                Row(
+                                children: [
+                                  Text(
+                                    'Tracking number : ',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  Text(
+                                    orders[i]['Trackingno'],
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Quality : ',
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                      Text(
+                                        '3',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Total Amount : ',
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                      Text(
+                                        '112',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Icon(Icons.money_off),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OrderDetails(id:orders[i]['_id'])));
+                                          },
+                                          style: ElevatedButton.styleFrom(),
+                                          child: const Text(
+                                            'Details',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Text(
+                                    'Delivered',
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 400,
-                    padding: EdgeInsets.only(
-                        left: 20, right: 20, top: 10, bottom: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Column(
-                      children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Order No 1947034',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  '05-12-2019',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Row(
-                          children: [
-                            Text(
-                              'Tracking number : ',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            Text(
-                              'IW3475453455',
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Quality : ',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                Text(
-                                  '3',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Total Amount : ',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                Text(
-                                  '112',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                Icon(CupertinoIcons.money_dollar),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  OrderDetails()));
-                                    },
-                                    style: ElevatedButton.styleFrom(),
-                                    child: const Text(
-                                      'Details',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Text(
-                              'Delivered',
-                              style: TextStyle(color: Colors.green),
-                            ),
-                          ],
-                        ),
-                      ],
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 400,
-                    padding: EdgeInsets.only(
-                        left: 20, right: 20, top: 10, bottom: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Column(
-                      children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Order No 1947034',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  '05-12-2019',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Row(
-                          children: [
-                            Text(
-                              'Tracking number : ',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            Text(
-                              'IW3475453455',
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Quality : ',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                Text(
-                                  '3',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Total Amount : ',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                Text(
-                                  '112',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                Icon(CupertinoIcons.money_dollar),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  OrderDetails()));
-                                    },
-                                    style: ElevatedButton.styleFrom(),
-                                    child: const Text(
-                                      'Details',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Text(
-                              'Delivered',
-                              style: TextStyle(color: Colors.green),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
             ],
           ),
         ),

@@ -3,13 +3,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OrderDetails extends StatefulWidget {
-  const OrderDetails({super.key});
-
+    OrderDetails({super.key,   required this.id});
+final String id;
   @override
   State<OrderDetails> createState() => _OrderDetailsState();
 }
 
 class _OrderDetailsState extends State<OrderDetails> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    print("id : ${widget.id}");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
